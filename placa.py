@@ -7,8 +7,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    
     title = ""
     placa = ""
+    data = {}   # Mova a inicialização para aqui
+    dados = {}  # Mova a inicialização para aqui
 
     if request.method == 'POST':
         placa = request.form.get('placa')
@@ -20,9 +23,6 @@ def index():
         }
 
         response = requests.get(url, headers=headers)
-
-        data = {}
-        dados = {}
 
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -59,10 +59,10 @@ def index():
             if "placa" in dados:
                 dados["placa_antiga"] = dados.pop("placa")
 
-        # print(json.dumps(dados, indent=4))
-
-    # Fundir os dicionários data e dados
-    merged_data = {**data, **dados}
+        # Fundir os dicionários data e dados
+        merged_data = {**data, **dados}
+    else: 
+        merged_data = {}  # Para um request GET, você pode definir merged_data como um dicionário vazio, ou definir quaisquer valores padrão que você desejar.
 
     return render_template('index.html', title=title, **merged_data)
 
