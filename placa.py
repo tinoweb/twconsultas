@@ -7,11 +7,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    
     title = ""
     placa = ""
-    data = {}   # Mova a inicialização para aqui
-    dados = {}  # Mova a inicialização para aqui
+
+    data = {}
+    dados = {}
 
     if request.method == 'POST':
         placa = request.form.get('placa')
@@ -27,6 +27,14 @@ def index():
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             
+            div_tag = soup.find('div', class_="col-sm-10 col-lg-8 col-xl-7")
+            if div_tag and div_tag.find('h3'):
+                h3_tag = div_tag.find('h3')
+                title = h3_tag.text
+            else:
+                title = "Placa não encontrada"
+                return render_template('index.html', title=title)
+            
             info_divs = soup.select("div.row > div > div.form-wrap > ul.list-xxs")
 
             for div in info_divs:
@@ -38,9 +46,6 @@ def index():
                     value_text = value_element.text.strip()
                     data[label_text] = value_text
             
-            h3_tag = soup.find('div', class_="col-sm-10 col-lg-8 col-xl-7").find('h3')
-            title = h3_tag.text
-        
             info_boxes = soup.select("#accordion1-card-body-aoqkylue .info-boxes .form-wrap ul.list-xxs")
 
             for box in info_boxes:
@@ -52,17 +57,12 @@ def index():
                     value_text = value_element.text.strip()
                     dados[label_text] = value_text
 
-
-        
-
             # Renomear a chave "placa" para "placa_antiga"
             if "placa" in dados:
                 dados["placa_antiga"] = dados.pop("placa")
 
-        # Fundir os dicionários data e dados
-        merged_data = {**data, **dados}
-    else: 
-        merged_data = {}  # Para um request GET, você pode definir merged_data como um dicionário vazio, ou definir quaisquer valores padrão que você desejar.
+    # Fundir os dicionários data e dados
+    merged_data = {**data, **dados}
 
     return render_template('index.html', title=title, **merged_data)
 
