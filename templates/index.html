@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Consulta Placa</title>
+    <style>
+        body {
+            padding-top: 50px;
+            background: linear-gradient(to bottom right,#ffffff,#2c2c2c) fixed
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            max-width: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="search-container">
+        <div class="search-box">
+            <form action="/" method="post" class="mb-3">
+                <label for="placa" class="form-label">Digite a placa:</label>
+                <div class="input-group">
+                    <input type="text" id="placa" name="placa" value="{{ placa_antiga }}" class="form-control">
+                    <button type="submit" class="btn btn-primary">Consultar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if title %}
+    <h3 class="text-center">Dados do Veículo</h3>
+    <p class="text-center mb-4">{{ title }}</p>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Placa:</strong> {{ placa_antiga }}</p>
+                        <p><strong>Marca/Modelo:</strong> {{ marca_modelo }}</p>
+                        <p><strong>Cor:</strong> {{ cor }}</p>
+                        <p><strong>Marca: </strong>{{ marca }}</p>
+                        <p><strong>Sub Modelo:</strong> {{ sub_modelo }}</p>
+                        <p><strong>Versão:</strong> {{ versão }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Combustível:</strong> {{ combustível }}</p>
+                        <p><strong>Tipo:</strong> {{ tipo }}</p>
+                        <p><strong>Segmento:</strong> {{ segmento }}</p>
+                        <p><strong>Ano Fabricação:</strong> {{ ano_fab }}</p>
+                        <p><strong>Ano Modificação:</strong> {{ ano_mod }}</p>
+                        <p><strong>Espécie:</strong> {{ espécie }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <h3 class="text-center mt-4 mb-4">Proprietário, Renavam, Chassi e Motor</h3>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Tipo doc Proprietario: </strong>{{ tipo_doc_propriet }}</p>
+                        <p><strong>Doc Proprietario: </strong>{{ docto_proprietário }}</p>
+                        <p><strong>Nome do Proprietario </strong>{{ nome_do_proprietário }}</p>
+                        <p><strong>Placa Mercosul: </strong>{{ placa_mercosul }}</p>
+                        <p><strong>Placa Antiga: </strong>{{ placa_antiga }}</p>
+                        <p><strong>Renavam: </strong>{{ renavam }}</p>
+                        <p><strong>Chassi: </strong>{{ chassi }}</p>
+                        <p><strong>Motor: </strong>{{ motor }}</p>
+                        <p><strong>Cilindradas: </strong>{{ cilindradas }}</p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Peso Bruto:</strong> {{ peso_bruto }}</p>
+                        <p><strong>Eixos:</strong> {{ eixos }}</p>
+                        <p><strong>Estado UF:</strong> {{ uf }}</p>
+                        <p><strong>Municipio:</strong> {{ município }}</p>
+                        <p><strong>Tipo doct Faturamento:</strong> {{ tipo_doct_faturamento }}</p>
+                        <p><strong>Faturado:</strong> {{ faturado }}</p>
+                        <p><strong>UF Faturado:</strong> {{ uf_faturado }}</p>
+                        <p><strong>Tipo de Propreitário:</strong> {{ tipo_de_proprietário }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Aqui, você pode adicionar os outros campos para as informações do proprietário, renavam, chassi, e motor quando você tiver esses dados, talvez usando a mesma estrutura de grid. -->
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
