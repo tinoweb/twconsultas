@@ -1,70 +1,16 @@
-from flask import Flask, render_template, request
-import requests
-from bs4 import BeautifulSoup
-import json
+from flask import Flask, render_template
+from consulta_placa.routes import placa_bp
+from consulta_cpf.routes import cpf_bp
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    title = ""
-    placa = ""
+    return render_template('index.html')
 
-    data = {}
-    dados = {}
-
-    if request.method == 'POST':
-        placa = request.form.get('placa')
-        url = f'https://placaconsultar.com.br/Checkouts/{placa}?type=Basica'
-
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            # ... (outros cabeçalhos)
-        }
-
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            div_tag = soup.find('div', class_="col-sm-10 col-lg-8 col-xl-7")
-            if div_tag and div_tag.find('h3'):
-                h3_tag = div_tag.find('h3')
-                title = h3_tag.text
-            else:
-                title = "Placa não encontrada"
-                return render_template('index.html', title=title)
-            
-            info_divs = soup.select("div.row > div > div.form-wrap > ul.list-xxs")
-
-            for div in info_divs:
-                label_element = div.find("li", class_="large text-gray-900")
-                value_element = div.find("li", class_="heading-5")
-
-                if label_element and value_element:
-                    label_text = label_element.text.strip().replace(':', '').replace('/', '_').replace(' ', '_').lower()
-                    value_text = value_element.text.strip()
-                    data[label_text] = value_text
-            
-            info_boxes = soup.select("#accordion1-card-body-aoqkylue .info-boxes .form-wrap ul.list-xxs")
-
-            for box in info_boxes:
-                label_element = box.find("li", class_="large text-gray-900")
-                value_element = box.find("li", class_="heading-5")
-
-                if label_element and value_element:
-                    label_text = label_element.text.strip().replace(':', '').replace('/', '_').replace(' ', '_').lower()
-                    value_text = value_element.text.strip()
-                    dados[label_text] = value_text
-
-            # Renomear a chave "placa" para "placa_antiga"
-            if "placa" in dados:
-                dados["placa_antiga"] = dados.pop("placa")
-
-    # Fundir os dicionários data e dados
-    merged_data = {**data, **dados}
-
-    return render_template('index.html', title=title, **merged_data)
+# Registra o Blueprint
+app.register_blueprint(placa_bp)
+app.register_blueprint(cpf_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

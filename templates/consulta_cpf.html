@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <title>Consulta Placa</title>
+    <style>
+        body {
+            /* padding-top: 50px; */
+            background: linear-gradient(to bottom right,#ffffff,#2c2c2c) fixed
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            max-width: 400px;
+            width: 100%;
+        }
+        /* --------- */
+        .loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(128, 128, 128, 0.5); /* Fundo cinza translúcido */
+            z-index: 1000;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-rocket fa-2x"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/consulta_placa">Consulta Placa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/consulta_cpf">Consulta CPF</a>
+                    </li>
+                    <!-- Você pode adicionar outros links conforme necessário aqui -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    
+    <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
+    </div>    
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Consulta Situação Cadastral</h5>
+                <form action="/scrape" id="consultaForm" method="post" onsubmit="handleSubmit()">
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label">CPF</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" oninput="formatCPF(this)">
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthdate" class="form-label">Data de Nascimento</label>
+                        <input type="text" class="form-control" id="birthdate" oninput="formatarData(this)" name="birthdate">
+                    </div>
+                    <!-- <button type="submit" class="btn btn-primary">Consultar</button> -->
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Consultar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card para exibir os resultados -->
+        <div class="alert alert-danger mt-3" id="error-message" style="display: none;"></div>
+
+        <div class="card mt-5" id="result-card">
+            <div class="card-body">
+                <h5 class="card-title">Resultado:</h5>
+                <div id="error-message" style="display: none;"></div> <!-- Mensagem de erro inicialmente oculta -->
+                {% if resultado.error %}
+                <!-- Se houver um erro, exiba a mensagem de erro -->
+                <div class="alert alert-danger">
+                    {{ resultado.error }}
+                </div>
+                {% elif resultado.createdOn %}
+                <!-- Se os dados foram encontrados, exiba-os -->
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nome:</strong> {{ resultado.name }}</li>
+                    <li class="list-group-item"><strong>CPF:</strong> {{ resultado.federalTaxNumber }}</li>
+                    <li class="list-group-item">
+                        <strong>Status:</strong> 
+                        {% if resultado.status == 'Regular' %}
+                        <span class="text-success">Regular</span>
+                        {% else %}
+                        <span class="text-warning">{{ resultado.status }}</span>
+                        {% endif %}
+                    </li>
+                    <li class="list-group-item"><strong>Data de Nascimento:</strong> {{ resultado.birthOn }}</li>
+                    <li class="list-group-item"><strong>Data de Criação:</strong> {{ resultado.createdOn }}</li>
+                </ul>
+                               
+                <div class="d-flex justify-content-center align-items-center" style="height: 10vh;">
+                    <button type="button" class="btn btn-warning btn-lg" data-bs-toggle="modal" data-bs-target="#paymentModal">Liberar todos os dados</button>
+                </div>
+
+                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="paymentModalLabel">Liberar Todas Informações</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Realize o pagamento via PIX usando as informações abaixo:</p>
+                                <!-- Aqui você pode adicionar as informações de pagamento via PIX -->
+                                <p>
+                                    <strong>Chave PIX:</strong>
+                                    <!-- <img src="../qrCode.png" alt="qrCode Pagar valor consulta placa"> -->
+                                    <img src="{{ url_for('static', filename='qrCode.png') }}" style="width: 62%;" alt="QR Code PIX">
+                                </p>
+                                <p><strong>Valor:</strong> R$ 50,00</p>
+                                <p>Após realizar o pagamento, envie o comprovante para nosso WhatsApp.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="https://wa.me/8598589498?text=Olá! Acabei de realizar o pagamento." class="btn btn-primary" target="_blank">Enviar Comprovante pelo WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% else %}
+                <!-- Se não houver erro nem dados válidos, exiba uma mensagem de aviso -->
+                <div class="alert alert-warning">
+                    Nenhum dado encontrado ainda...
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Aqui, você pode adicionar os outros campos para as informações do proprietário, renavam, chassi, e motor quando você tiver esses dados, talvez usando a mesma estrutura de grid. -->
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        window.onload = function() {
+            document.getElementById("loader-container").style.display = "none";
+        };
+
+        function handleSubmit() {
+            // Mostrar o loader
+            document.getElementById("loader-container").style.display = "flex";
+            
+            // Desativar o botão
+            document.getElementById("liberate-button").disabled = true;
+        }
+
+        function formatarData(input) {
+            var value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            if (value.length === 8) {
+                // Separa os dígitos para formar a data formatada
+                var day = value.substring(0, 2);
+                var month = value.substring(2, 4);
+                var year = value.substring(4, 8);
+
+                // Define o valor formatado no campo de entrada
+                input.value = year + '-' + month + '-' + day;
+            }
+        }
+
+        function formatCPF(input) {
+            // Remove traços e pontos e deixa apenas os números
+            var cpf = input.value.replace(/\D/g, '');
+
+            // Verifica se o CPF tem 11 dígitos
+            if (cpf.length === 11) {
+                // Formata o CPF com traços (XXX.XXX.XXX-XX)
+                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                input.value = cpf;
+
+                // Agora você pode enviar os dados do CPF para a consulta
+                // Coloque aqui o código para enviar o CPF para a consulta
+            } else {
+                // Se o CPF não tem 11 dígitos, exibe uma mensagem de erro
+                alert('CPF inválido. Insira 11 dígitos.');
+            }
+        }
+    
+    </script>
+
+
+
+
+</body>
+
+</html>

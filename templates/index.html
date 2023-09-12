@@ -5,204 +5,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Consulta Placa</title>
+    <title>Consulta</title>
     <style>
-        body {
-            padding-top: 50px;
-            background: linear-gradient(to bottom right,#ffffff,#2c2c2c) fixed
+        .service-icon {
+            text-align: center;
+            margin-bottom: 20px; /* Adicione margem inferior para separar os ícones */
         }
 
-        .search-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
+        .service-icon i {
+            font-size: 3rem; /* Tamanho do ícone */
+            color: #e9ecef; /* Altere conforme sua necessidade */
         }
-
-        .search-box {
-            max-width: 400px;
-            width: 100%;
+        .center-icons {
+            margin-top: 15vh; /* Ajuste a margem superior conforme necessário para centralizar verticalmente */
         }
-        /* --------- */
-        .loader-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: rgba(128, 128, 128, 0.5); /* Fundo cinza translúcido */
-            z-index: 1000;
-        }
-
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
     </style>
 </head>
 
 <body>
-    <div class="loader-container" id="loader-container">
-        <div class="loader"></div>
-    </div>    
-
-    <div class="search-container">
-        <div class="search-box">
-            <form action="/" method="post" class="mb-3" onsubmit="handleSubmit()">
-                <label for="placa" class="form-label">Digite a placa:</label>
-                <div class="input-group">
-                    <!-- <input type="text" id="placa" name="placa" value="{{ placa_antiga }}" class="form-control"> -->
-                    <input type="text" id="placa" name="placa" value="{{ placa_antiga }}" class="form-control" maxlength="7" pattern="[A-Za-z0-9]{1,7}" title="Insira uma placa válida com até 7 letras ou dígitos." required>
-                    <button type="submit" id="submit-button" class="btn btn-primary">Consultar</button>
+    <div class="container center-icons">
+        <div class="row justify-content-center">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="/consulta_placa" class="btn btn-primary btn-lg d-block">
+                        <i class="fas fa-car"></i>
+                        <p>Consulta Placa</p>
+                    </a>
                 </div>
-            </form>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="/consulta_cpf" class="btn btn-primary btn-lg d-block">
+                        <i class="fas fa-id-card"></i>
+                        <p>Consulta CPF</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-icon">
+                    <a href="#" class="btn btn-secondary btn-lg d-block" disabled>
+                        <i class="fas fa-search"></i>
+                        <p>Consulta Em Breve</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Adicione outros serviços em breve conforme necessário -->
         </div>
     </div>
 
-    {% if title %}
-        {% if title == "Placa não encontrada" %}
-        <div class="container mt-4">
-            <div class="alert alert-danger text-center" role="alert" style="font-size: 24px; font-weight: bold;">
-                {{ title.upper() }}
-            </div>
-        </div>
-        {% else %}
-        <h3 class="text-center">Dados do Veículo</h3>
-        <p class="text-center mb-4">{{ title }}</p>
-        <div class="container">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>Placa:</strong> {{ placa_antiga }}</p>
-                            <p><strong>Marca/Modelo:</strong> {{ marca_modelo }}</p>
-                            <p><strong>Cor:</strong> {{ cor }}</p>
-                            <p><strong>Marca: </strong>{{ marca }}</p>
-                            <p><strong>Sub Modelo:</strong> {{ sub_modelo }}</p>
-                            <p><strong>Versão:</strong> {{ versão }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>Combustível:</strong> {{ combustível }}</p>
-                            <p><strong>Tipo:</strong> {{ tipo }}</p>
-                            <p><strong>Segmento:</strong> {{ segmento }}</p>
-                            <p><strong>Ano Fabricação:</strong> {{ ano_fab }}</p>
-                            <p><strong>Ano Modificação:</strong> {{ ano_mod }}</p>
-                            <p><strong>Espécie:</strong> {{ espécie }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <h3 class="text-center mt-4 mb-4">Proprietário, Renavam, Chassi e Motor</h3>
-
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>Tipo doc Proprietario: </strong>{{ tipo_doc_propriet }}</p>
-                            <p><strong>Doc Proprietario: </strong>{{ docto_proprietário }}</p>
-                            <p><strong>Nome do Proprietario </strong>{{ nome_do_proprietário }}</p>
-                            <p><strong>Placa Mercosul: </strong>{{ placa_mercosul }}</p>
-                            <p><strong>Placa Antiga: </strong>{{ placa_antiga }}</p>
-                            <p><strong>Renavam: </strong>{{ renavam }}</p>
-                            <p><strong>Chassi: </strong>{{ chassi }}</p>
-                            <p><strong>Motor: </strong>{{ motor }}</p>
-                            <p><strong>Cilindradas: </strong>{{ cilindradas }}</p>
-                            
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>Peso Bruto:</strong> {{ peso_bruto }}</p>
-                            <p><strong>Eixos:</strong> {{ eixos }}</p>
-                            <p><strong>Estado UF:</strong> {{ uf }}</p>
-                            <p><strong>Municipio:</strong> {{ município }}</p>
-                            <p><strong>Tipo doct Faturamento:</strong> {{ tipo_doct_faturamento }}</p>
-                            <p><strong>Faturado:</strong> {{ faturado }}</p>
-                            <p><strong>UF Faturado:</strong> {{ uf_faturado }}</p>
-                            <p><strong>Tipo de Propreitário:</strong> {{ tipo_de_proprietário }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-5 mb-5">
-                <button type="button" class="btn btn-warning btn-lg" data-bs-toggle="modal" data-bs-target="#paymentModal">Liberar Todas Informações</button>
-            </div>
-
-            <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="paymentModalLabel">Liberar Todas Informações</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Realize o pagamento via PIX usando as informações abaixo:</p>
-                            <!-- Aqui você pode adicionar as informações de pagamento via PIX -->
-                            <p>
-                                <strong>Chave PIX:</strong>
-                                <!-- <img src="../qrCode.png" alt="qrCode Pagar valor consulta placa"> -->
-                                <img src="{{ url_for('static', filename='qrCode.png') }}" style="width: 62%;" alt="QR Code PIX">
-                            </p>
-                            <p><strong>Valor:</strong> R$ 50,00</p>
-                            <p>Após realizar o pagamento, envie o comprovante para nosso WhatsApp.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="https://wa.me/8598589498?text=Olá! Acabei de realizar o pagamento." class="btn btn-primary" target="_blank">Enviar Comprovante pelo WhatsApp</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-        </div>
-
-        
-        {% endif %}
-    {% endif %}
-
-    <!-- Aqui, você pode adicionar os outros campos para as informações do proprietário, renavam, chassi, e motor quando você tiver esses dados, talvez usando a mesma estrutura de grid. -->
-
     <!-- Scripts do Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        window.onload = function() {
-            document.getElementById("loader-container").style.display = "none";
-        };
-
-        function handleSubmit() {
-            // Mostrar o loader
-            document.getElementById("loader-container").style.display = "flex";
-            
-            // Desativar o botão
-            document.getElementById("submit-button").disabled = true;
-        }
-    </script>
-
-
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </body>
 
 </html>
